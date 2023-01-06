@@ -4,8 +4,7 @@
     import TableContainer from "../components/TableContainer.svelte";
 </script>
 
-<style>
-</style>
+<style></style>
 
 <CovidStat />
 
