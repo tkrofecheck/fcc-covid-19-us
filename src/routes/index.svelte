@@ -3,11 +3,13 @@
     
     export async function preload(){
         try {
+            // throw new Error(); // uncomment this line to test 500 error message
             const usStats = await requests.usStats();
 
             return { usStats };
         } catch(err) {
-            console.log('preload errors', err)
+            this.error(500, "There was an error with the api, please try again in 5 minutes.");
+            return;
         }
     }
 </script>
@@ -15,6 +17,7 @@
     import CovidStat from "../components/CovidStat.svelte";
     import CovidChart from "../components/CovidChart.svelte";
     import TableContainer from "../components/TableContainer.svelte";
+  import Error from './_error.svelte';
 
     export let usStats;
     console.log(usStats, "usStats");
