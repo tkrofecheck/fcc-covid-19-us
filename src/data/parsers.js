@@ -103,6 +103,92 @@ function stateStats(state, data) {
   }
 */
 
+function historicUS(historicData) {
+    return parseHistoric(historicData);
+}
+
+function parseHistoric(historicData) {
+    return [
+        {
+            label: 'Cases',
+            key: 'positive',
+            color: 'rgb(100, 0, 200)',
+        },
+        {
+            label: 'Recovered',
+            key: 'recovered',
+            color: 'rgb(100, 100, 200)',
+        },
+        {
+            label: 'Total Tested',
+            key: 'totalTestResults',
+            color: 'rgb(10, 30, 100)',
+        },
+        {
+            label: 'Hospitalized',
+            key: 'hospitalizedCurrently',
+            color: 'rgb(20, 100, 230)',
+        },
+        {
+            label: 'Deaths',
+            key: 'death',
+            color: 'rgb(255, 99, 132)',
+        }
+    ].reduce((prev, next) => {
+        if (historicData.filter(d => d[next.key] !== null).length > 4) {
+            prev.push(parseChart(historicData, next.key, next.label, next.color));
+        }
+
+        return prev;
+    }, []);
+}
+
+function parseChart(historicData, key, label, color) {
+    const chartData = historicData.map(data => {
+        return {
+            x: format.timestamp(data.date, 'YYYYMMDD'),
+            y: data[key] || 0,
+        }
+    });
+
+    return {
+        label,
+        data: chartData,
+        fill: false,
+        borderColor: color
+    }
+}
+
+/* Historic US Stats - Object Example (for Chart)
+{
+    "date": 20210307,
+    "states": 56,
+    "positive": 28756489,
+    "negative": 74582825,
+    "pending": 11808,
+    "hospitalizedCurrently": 40199,
+    "hospitalizedCumulative": 776361,
+    "inIcuCurrently": 8134,
+    "inIcuCumulative": 45475,
+    "onVentilatorCurrently": 2802,
+    "onVentilatorCumulative": 4281,
+    "dateChecked": "2021-03-07T24:00:00Z",
+    "death": 515151,
+    "hospitalized": 776361,
+    "totalTestResults": 363825123,
+    "lastModified": "2021-03-07T24:00:00Z",
+    "recovered": null,
+    "total": 0,
+    "posNeg": 0,
+    "deathIncrease": 842,
+    "hospitalizedIncrease": 726,
+    "negativeIncrease": 131835,
+    "positiveIncrease": 41835,
+    "totalTestResultsIncrease": 1170059,
+    "hash": "a80d0063822e251249fd9a44730c49cb23defd83"
+  }
+*/
+
 function parseStats(rawStats) {
     return {
         cases: format.number(rawStats.positive),
@@ -112,11 +198,12 @@ function parseStats(rawStats) {
         hospitalized: format.number(rawStats.hospitalized),
         icu: format.number(rawStats.inIcuCurrently),
         tested: format.number(rawStats.totalTestResults),
-        updated: format.timestamp(rawStats.lastModified)
+        updated: format.timestamp(rawStats.lastModified, 'LLLL')
     }
 }
 
 export default {
     usStats,
     stateStats,
+    historicUS,
 };

@@ -8,8 +8,8 @@ function number(num) {
     return num.toLocaleString();
 }
 
-function timestamp(ts) {
-    return moment(ts).format('LLLL');
+function timestamp(ts, format) {
+    return moment(ts).format(format);
 }
 
 export default {

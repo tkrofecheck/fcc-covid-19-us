@@ -5,9 +5,11 @@
         try {
             // throw new Error(); // uncomment this line to test 500 error message
             const usStats = await requests.usStats();
+            const historic = await requests.historicUS();
 
-            return { usStats };
+            return { usStats, historic };
         } catch(err) {
+            console.log('error', err);
             this.error(500, "There was an error with the api, please try again in 5 minutes.");
             return;
         }
@@ -20,7 +22,10 @@
   import Error from './_error.svelte';
 
     export let usStats;
-    console.log(usStats, "usStats");
+    export let historic;
+
+    console.log("usStats", usStats);
+    console.log("historic", historic);
 </script>
 
 <svelte:head>
