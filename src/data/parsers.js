@@ -1,3 +1,4 @@
+import moment from 'moment';
 import format from './format';
 
 function usStats(data) {
@@ -146,7 +147,7 @@ function parseHistoric(historicData) {
 function parseChart(historicData, key, label, color) {
     const chartData = historicData.map(data => {
         return {
-            x: format.timestamp(data.date, 'YYYYMMDD'),
+            x: moment(data.date, 'YYYYMMDD'),
             y: data[key] || 0,
         }
     });
@@ -198,7 +199,7 @@ function parseStats(rawStats) {
         hospitalized: format.number(rawStats.hospitalized),
         icu: format.number(rawStats.inIcuCurrently),
         tested: format.number(rawStats.totalTestResults),
-        updated: format.timestamp(rawStats.lastModified, 'LLLL')
+        updated: moment(rawStats.lastModified, 'LLLL'),
     }
 }
 
