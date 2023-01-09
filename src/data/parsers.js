@@ -3,19 +3,10 @@ import format from './format';
 function usStats(data) {
     const [usStatRaw] = data;
 
-    return {
-        cases: format.number(usStatRaw.positive),
-        deaths: format.number(usStatRaw.death),
-        recovered: format.number(usStatRaw.recovered),
-        ventilator: format.number(usStatRaw.onVentilatorCurrently),
-        hospitalized: format.number(usStatRaw.hospitalized),
-        icu: format.number(usStatRaw.inIcuCurrently),
-        tested: format.number(usStatRaw.totalTestResults),
-        updated: format.timestamp(usStatRaw.lastModified)
-    }
+    return parseStats(usStatRaw);
 }
 
-/*
+/* US Stats - Object Example
 {
     "date": 20210307,
     "states": 56,
@@ -45,6 +36,87 @@ function usStats(data) {
   }
 */
 
+function stateStats(state, data) {
+    const stateRawData = data.find(d => d.state === state);
+
+    return parseStats(stateRawData);
+}
+
+/* State Stats - Object Example
+{
+    "date": 20210307,
+    "state": "AK",
+    "positive": 56886,
+    "probableCases": null,
+    "negative": null,
+    "pending": null,
+    "totalTestResultsSource": "totalTestsViral",
+    "totalTestResults": 1731628,
+    "hospitalizedCurrently": 33,
+    "hospitalizedCumulative": 1293,
+    "inIcuCurrently": null,
+    "inIcuCumulative": null,
+    "onVentilatorCurrently": 2,
+    "onVentilatorCumulative": null,
+    "recovered": null,
+    "lastUpdateEt": "3/5/2021 03:59",
+    "dateModified": "2021-03-05T03:59:00Z",
+    "checkTimeEt": "03/04 22:59",
+    "death": 305,
+    "hospitalized": 1293,
+    "hospitalizedDischarged": null,
+    "dateChecked": "2021-03-05T03:59:00Z",
+    "totalTestsViral": 1731628,
+    "positiveTestsViral": 68693,
+    "negativeTestsViral": 1660758,
+    "positiveCasesViral": null,
+    "deathConfirmed": null,
+    "deathProbable": null,
+    "totalTestEncountersViral": null,
+    "totalTestsPeopleViral": null,
+    "totalTestsAntibody": null,
+    "positiveTestsAntibody": null,
+    "negativeTestsAntibody": null,
+    "totalTestsPeopleAntibody": null,
+    "positiveTestsPeopleAntibody": null,
+    "negativeTestsPeopleAntibody": null,
+    "totalTestsPeopleAntigen": null,
+    "positiveTestsPeopleAntigen": null,
+    "totalTestsAntigen": null,
+    "positiveTestsAntigen": null,
+    "fips": "02",
+    "positiveIncrease": 0,
+    "negativeIncrease": 0,
+    "total": 56886,
+    "totalTestResultsIncrease": 0,
+    "posNeg": 56886,
+    "dataQualityGrade": null,
+    "deathIncrease": 0,
+    "hospitalizedIncrease": 0,
+    "hash": "dc4bccd4bb885349d7e94d6fed058e285d4be164",
+    "commercialScore": 0,
+    "negativeRegularScore": 0,
+    "negativeScore": 0,
+    "positiveScore": 0,
+    "score": 0,
+    "grade": ""
+  }
+*/
+
+function parseStats(rawStats) {
+    return {
+        cases: format.number(rawStats.positive),
+        deaths: format.number(rawStats.death),
+        recovered: format.number(rawStats.recovered),
+        ventilator: format.number(rawStats.onVentilatorCurrently),
+        hospitalized: format.number(rawStats.hospitalized),
+        icu: format.number(rawStats.inIcuCurrently),
+        tested: format.number(rawStats.totalTestResults),
+        updated: format.timestamp(rawStats.lastModified)
+    }
+}
+
 export default {
     usStats,
+    stateStats,
 };
