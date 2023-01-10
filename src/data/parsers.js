@@ -136,7 +136,7 @@ function parseHistoric(historicData) {
             color: 'rgb(255, 99, 132)',
         }
     ].reduce((prev, next) => {
-        if (historicData.filter(d => d[next.key] !== null).length > 4) {
+        if (historicData.filter(d => d[next.key]).length > 4) {
             prev.push(parseChart(historicData, next.key, next.label, next.color));
         }
 
@@ -190,6 +190,12 @@ function parseChart(historicData, key, label, color) {
   }
 */
 
+function historicState(state, historicData) {
+    const stateHistoric = historicData.filter(d => d.state === state);
+
+    return parseHistoric(stateHistoric);
+}
+
 function parseStats(rawStats) {
     return {
         cases: format.number(rawStats.positive),
@@ -207,4 +213,5 @@ export default {
     usStats,
     stateStats,
     historicUS,
+    historicState,
 };

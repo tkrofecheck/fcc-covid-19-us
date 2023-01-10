@@ -1,9 +1,12 @@
 <script context="module">
     import stateNames from '../data/stateNames.js';
     import requests from '../data/requests.js';
+
+    export let historic;
     
     export async function preload(page) {
         const state = page.params['state'];
+        const fullStateName = stateNames.find(s=> s.abbreviation === state).name;
 
         if (stateNames.find(s=> s.abbreviation === state) === undefined) {
             console.log("should get error");
@@ -12,9 +15,13 @@
 
         try {
             const stats = await requests.stateStats(state);
+            historic = await requests.historicState(state);
+
             console.log('stats', stats);
+            console.log("historic", historic);
+
             // throw new Error(); // uncomment this line to test 500 error message
-            return { state, stats };
+            return { state: fullStateName, stats, historic };
         } catch (err) {
             this.error(500, "There was an error with the api, please try again in 5 minutes.");
             return;
@@ -43,4 +50,4 @@
 
 <CovidStat {...stats}/>
 
-<CovidChart />
+<CovidChart historicData={historic} title="Covid-19 &mdash; {state}" />
